@@ -66,17 +66,6 @@ Edit config.json contents, for example::
 
 In one terminal, run the bot::
 
-  tox -evenv -- ptgbot -d config.json
+  tox -evenv -- govnahbot -d config.json
 
-Join that channel and give commands to the bot::
-
-  ~add swift
-  #swift now discussing ring placement
-
-(note, the bot currently only takes commands from Freenode identified users)
-
-In another terminal, start the webserver::
-
-  cd html && python -m SimpleHTTPServer
-
-Open the web page in a web browser: http://127.0.0.1:8000/ptg.html
+Join that configured channel(s) and attempt commands.
