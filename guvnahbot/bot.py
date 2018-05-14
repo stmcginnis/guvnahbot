@@ -29,7 +29,7 @@ import time
 import ssl
 import textwrap
 
-from relinfobot import governance
+from guvnahbot import governance
 
 try:
     import daemon.pidlockfile as pid_file_module
@@ -49,9 +49,9 @@ ACTIONS = ['?PTL', '?REPOS', '?CHANNEL', '?MISSION', '?TAGS', '?WHOIS']
 
 
 class GuvnahBot(irc.bot.SingleServerIRCBot):
-    log = logging.getLogger("relinfobot.bot")
+    log = logging.getLogger("guvnahbot.bot")
 
-    def __init__(self, nickname, password, server, port, channels):
+    def __init__(self, nickname, password, server, port, channel):
         if port == 6697:
             factory = irc.connection.Factory(wrapper=ssl.wrap_socket)
             irc.bot.SingleServerIRCBot.__init__(self,
@@ -64,7 +64,7 @@ class GuvnahBot(irc.bot.SingleServerIRCBot):
                                                 nickname, nickname)
         self.nickname = nickname
         self.password = password
-        self.channels = channels.split(',')
+        self.channel = channel
         self.identify_msg_cap = False
         self.team_data = governance.get_team_data()
 
@@ -85,9 +85,8 @@ class GuvnahBot(irc.bot.SingleServerIRCBot):
         if (self.password):
             self.log.debug("Identifying to nickserv")
             c.privmsg("nickserv", "identify %s " % self.password)
-        for channel in self.channels:
-            self.log.info("Joining %s" % channel)
-            c.join(channel)
+        self.log.info("Joining %s" % self.channel)
+        c.join(self.channel)
         time.sleep(ANTI_FLOOD_SLEEP)
 
     def on_cap(self, c, e):
@@ -224,12 +223,14 @@ def start(configpath):
     else:
         logging.basicConfig(level=logging.DEBUG)
 
-    bot = GuvnahBot(config['irc_nick'],
-                    config.get('irc_pass', ''),
-                    config['irc_server'],
-                    config['irc_port'],
-                    config['irc_channels'])
-    bot.start()
+    # TODO: This does not actually work with multiple channels right now.
+    for channel in config['irc_channels'].split(','):
+        bot = GuvnahBot(config['irc_nick'],
+                        config.get('irc_pass', ''),
+                        config['irc_server'],
+                        config['irc_port'],
+                        channel)
+        bot.start()
 
 
 def main():
@@ -241,7 +242,7 @@ def main():
 
     if not args.nodaemon:
         pid = pid_file_module.TimeoutPIDLockFile(
-            "/var/run/relinfobot/guvnahbot.pid", 10)
+            "/var/run/guvnahbot/guvnahbot.pid", 10)
         with daemon.DaemonContext(pidfile=pid):
             start(args.configfile)
     start(args.configfile)

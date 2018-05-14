@@ -17,8 +17,8 @@ Adapted and heavily in debt to the openstack/releases governance.py source."""
 import requests
 import weakref
 
-from relinfobot import wiki
-from relinfobot import yamlutils
+from guvnahbot import wiki
+from guvnahbot import yamlutils
 
 
 PROJECTS_LIST = "http://git.openstack.org/cgit/openstack/governance/plain/reference/projects.yaml"  # noqa
