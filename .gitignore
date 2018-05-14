@@ -1,0 +1,8 @@
+.tox
+build/*
+*.pyc
+*.egg*
+AUTHORS
+ChangeLog
+config.ini
+/config.json

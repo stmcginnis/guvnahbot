@@ -1,0 +1,7 @@
+{
+  "irc_nick": "guvnah",
+  "irc_pass": "",
+  "irc_server": "irc.freenode.net",
+  "irc_port": 6667,
+  "irc_channels": "#openstack-tc,#openstack-release"
+}
