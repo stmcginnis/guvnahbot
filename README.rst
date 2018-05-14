@@ -66,6 +66,6 @@ Edit config.json contents, for example::
 
 In one terminal, run the bot::
 
-  tox -evenv -- govnahbot -d config.json
+  tox -evenv -- guvnahbot -d config.json
 
 Join that configured channel(s) and attempt commands.

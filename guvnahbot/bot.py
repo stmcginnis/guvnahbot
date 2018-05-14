@@ -48,7 +48,7 @@ ANTI_FLOOD_SLEEP = 2
 ACTIONS = ['?PTL', '?REPOS', '?CHANNEL', '?MISSION', '?TAGS', '?WHOIS']
 
 
-class GovnahBot(irc.bot.SingleServerIRCBot):
+class GuvnahBot(irc.bot.SingleServerIRCBot):
     log = logging.getLogger("relinfobot.bot")
 
     def __init__(self, nickname, password, server, port, channels):
@@ -224,7 +224,7 @@ def start(configpath):
     else:
         logging.basicConfig(level=logging.DEBUG)
 
-    bot = GovnahBot(config['irc_nick'],
+    bot = GuvnahBot(config['irc_nick'],
                     config.get('irc_pass', ''),
                     config['irc_server'],
                     config['irc_port'],
@@ -241,7 +241,7 @@ def main():
 
     if not args.nodaemon:
         pid = pid_file_module.TimeoutPIDLockFile(
-            "/var/run/relinfobot/govnahbot.pid", 10)
+            "/var/run/relinfobot/guvnahbot.pid", 10)
         with daemon.DaemonContext(pidfile=pid):
             start(args.configfile)
     start(args.configfile)
