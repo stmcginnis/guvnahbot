@@ -140,7 +140,7 @@ class GuvnahBot(irc.bot.SingleServerIRCBot):
         team_dict = self.team_data.get(team_name)
         team = governance.Team(team_name, team_dict)
         self.send(channel, "%s's mission statement is: %s" % (
-            team_name.title(), team.irc_channel))
+            team_name.title(), team.mission))
 
     def send_tags(self, channel, team_or_repo):
         """Sends the tags of a team."""
@@ -165,9 +165,10 @@ class GuvnahBot(irc.bot.SingleServerIRCBot):
         """Sends the team that owns a repo."""
         try:
             team_name = governance.get_repo_owner(self.team_data, repo_name)
+            self.send(channel, '%s is owned by %s' % (repo_name, team_name))
         except ValueError:
-            pass
-        self.send(channel, '%s is owned by %s' % (repo_name, team_name))
+            self.send(channel,
+                      'Error getting whois. Is %s a repo?' % repo_name)
 
     def on_pubmsg(self, c, e):
         if not self.identify_msg_cap:
