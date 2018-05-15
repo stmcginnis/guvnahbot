@@ -51,7 +51,7 @@ ACTIONS = ['?PTL', '?REPOS', '?CHANNEL', '?MISSION', '?TAGS', '?WHOIS']
 class GuvnahBot(irc.bot.SingleServerIRCBot):
     log = logging.getLogger("guvnahbot.bot")
 
-    def __init__(self, nickname, password, server, port, channel):
+    def __init__(self, nickname, password, server, port, channels):
         if port == 6697:
             factory = irc.connection.Factory(wrapper=ssl.wrap_socket)
             irc.bot.SingleServerIRCBot.__init__(self,
@@ -64,7 +64,7 @@ class GuvnahBot(irc.bot.SingleServerIRCBot):
                                                 nickname, nickname)
         self.nickname = nickname
         self.password = password
-        self.channel = channel
+        self.chans = channels.split(',')
         self.identify_msg_cap = False
         self.team_data = governance.get_team_data()
 
@@ -85,8 +85,9 @@ class GuvnahBot(irc.bot.SingleServerIRCBot):
         if (self.password):
             self.log.debug("Identifying to nickserv")
             c.privmsg("nickserv", "identify %s " % self.password)
-        self.log.info("Joining %s" % self.channel)
-        c.join(self.channel)
+        for channel in self.chans:
+            self.log.info("Joining %s" % channel)
+            c.join(channel)
         time.sleep(ANTI_FLOOD_SLEEP)
 
     def on_cap(self, c, e):
@@ -223,14 +224,12 @@ def start(configpath):
     else:
         logging.basicConfig(level=logging.DEBUG)
 
-    # TODO: This does not actually work with multiple channels right now.
-    for channel in config['irc_channels'].split(','):
-        bot = GuvnahBot(config['irc_nick'],
-                        config.get('irc_pass', ''),
-                        config['irc_server'],
-                        config['irc_port'],
-                        channel)
-        bot.start()
+    bot = GuvnahBot(config['irc_nick'],
+                    config.get('irc_pass', ''),
+                    config['irc_server'],
+                    config['irc_port'],
+                    config['irc_channels'])
+    bot.start()
 
 
 def main():
